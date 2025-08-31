@@ -1,6 +1,6 @@
 package com.StayNest.StayNest.Entity;
 
-import Airbnb.example.AirBnB.Entity.enums.PaymentStatus;
+import com.StayNest.StayNest.Entity.Enums.PaymentStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
