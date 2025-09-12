@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.TreeSet;
+
 @Controller
 @RequestMapping("/admin/hotels")
 @RequiredArgsConstructor
@@ -36,6 +38,11 @@ public class HotelController {
     @DeleteMapping("/{hotelId}")
     public ResponseEntity<Void> deleteHotelById(@PathVariable Long hotelId){
         hotelService.deleteHotelById(hotelId);
+        return ResponseEntity.noContent().build();
+    }
+    @PatchMapping("/{hotelId}")
+    public ResponseEntity<Void> activeHotel(@PathVariable Long hotelId){
+        hotelService.activeHotel(hotelId);
         return ResponseEntity.noContent().build();
     }
 

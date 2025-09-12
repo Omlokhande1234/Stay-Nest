@@ -11,4 +11,6 @@ public interface HotelService {
 
     void deleteHotelById(Long id);
 
+    void activeHotel(Long id);
+
 }
