@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Setter
-@Table()
 public class Hotel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,6 +39,10 @@ public class Hotel {
 
     @Column(nullable = false)
     private boolean active;
+
+    //Here one user/owner can have the multiple hotels
+    @ManyToOne
+    private User owner;
 
 //    This is the other way to map the relation between the rooms and hotel
 //    @OneToMany(mappedBy = "hotel",fetch = FetchType.LAZY)
