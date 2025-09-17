@@ -1,5 +1,6 @@
 package com.StayNest.StayNest.Entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -7,6 +8,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -44,6 +46,9 @@ public class Hotel {
     @ManyToOne
     private User owner;
 
+    @OneToMany(mappedBy = "hotel")
+    @JsonManagedReference
+    private List<Room> rooms;
 //    This is the other way to map the relation between the rooms and hotel
 //    @OneToMany(mappedBy = "hotel",fetch = FetchType.LAZY)
 //    private List<Room> rooms;
