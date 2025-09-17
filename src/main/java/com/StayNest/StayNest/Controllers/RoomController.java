@@ -31,8 +31,7 @@ public class RoomController {
     @GetMapping("/{roomId}")
     public  ResponseEntity<RoomDTO> getRoom(@PathVariable Long roomId){
         log.info("Getting room for the hotel with id {}",roomId);
-        RoomDTO roomDTO=roomService.getRoomById(roomId);
-        return ResponseEntity.ok(roomDTO);
+        return ResponseEntity.ok(roomService.getRoomById(roomId));
     }
     @GetMapping
     public ResponseEntity<List<RoomDTO>> getallRooms(@PathVariable Long hotelId){
