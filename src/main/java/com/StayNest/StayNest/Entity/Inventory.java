@@ -1,12 +1,13 @@
 package com.StayNest.StayNest.Entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -15,9 +16,12 @@ import java.time.LocalDateTime;
 @Table(
         uniqueConstraints = @UniqueConstraint(
                 name = "unique_hotel_room_date",
-                columnNames = {"hotel_id","room_id","data"}
+                columnNames = {"hotel_id","room_id","date"}
         )
 )
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Inventory {
 
     @Id
@@ -32,14 +36,20 @@ public class Inventory {
     @JoinColumn(name = "room_id",nullable = false)
     private Room room;
 
+    @Column(nullable = false)
+    private LocalDate date;
+
     @Column(nullable = false,columnDefinition = "INTEGER DEFAULT 0")
     private Integer bookedCount;
 
     @Column(nullable = false)
     private Integer totalCount;
 
-    @Column(nullable = false,precision = 2,scale = 2)
+    @Column(nullable = false,precision = 5,scale = 2)
     private BigDecimal surgeFactor;
+
+    @Column(nullable = false)
+    private BigDecimal price;
 
     @Column(nullable = false)
     private String city;
