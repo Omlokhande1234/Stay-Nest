@@ -4,6 +4,7 @@ import com.StayNest.StayNest.Entity.Hotel;
 import com.StayNest.StayNest.Entity.Room;
 import com.StayNest.StayNest.Exceptions.ResoureNotFoundException;
 import com.StayNest.StayNest.Repository.HotelRepository;
+import com.StayNest.StayNest.Repository.RoomRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +18,7 @@ public class HotelServiceImpl implements HotelService {
     private final HotelRepository hotelRepository;
     private final ModelMapper modelMapper;
     private final InventoryService inventoryService;
+    private final RoomRepository roomRepository;
 
     @Override
     public HotelDTO createNewHotel(HotelDTO hotelDTO) {
@@ -53,11 +55,13 @@ public class HotelServiceImpl implements HotelService {
     public void deleteHotelById(Long id) {
         Hotel hotel=hotelRepository.findById(id)
                         .orElseThrow(()->new ResoureNotFoundException("Hotel not found with the id "+id));
-        hotelRepository.deleteById(id);
+
         // delete the future inventories for this hotel
         for (Room room:hotel.getRooms()){
             inventoryService.deleteFutureInventories(room);
+            roomRepository.deleteById(room.getId());
         }
+        hotelRepository.deleteById(id);
     }
 
     @Transactional
