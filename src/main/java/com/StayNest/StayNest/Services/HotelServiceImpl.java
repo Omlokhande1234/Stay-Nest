@@ -1,5 +1,7 @@
 package com.StayNest.StayNest.Services;
 import com.StayNest.StayNest.DTO.HotelDTO;
+import com.StayNest.StayNest.DTO.HotellnfoDTO;
+import com.StayNest.StayNest.DTO.RoomDTO;
 import com.StayNest.StayNest.Entity.Hotel;
 import com.StayNest.StayNest.Entity.Room;
 import com.StayNest.StayNest.Exceptions.ResoureNotFoundException;
@@ -10,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @Slf4j
@@ -77,6 +81,17 @@ public class HotelServiceImpl implements HotelService {
         for (Room room:hotel.getRooms()){
             inventoryService.initializeRoomForaYear(room);
         }
+
+    }
+
+    @Override
+    public HotellnfoDTO getHotelInfoById(Long hotelId) {
+        Hotel hotel =hotelRepository.
+                findById(hotelId)
+                .orElseThrow(()->new ResoureNotFoundException("Hotel Not found with the id: "+hotelId));
+        List<RoomDTO> rooms=hotel.getRooms().stream()
+                .map((element)->modelMapper.map(element,RoomDTO.class)).toList();
+        return new HotellnfoDTO(modelMapper.map(hotel,HotelDTO.class),rooms);
 
     }
 }

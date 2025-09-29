@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Table(
+//        name = "inventory",
         uniqueConstraints = @UniqueConstraint(
                 name = "unique_hotel_room_date",
                 columnNames = {"hotel_id","room_id","date"}
@@ -41,6 +42,9 @@ public class Inventory {
 
     @Column(nullable = false,columnDefinition = "INTEGER DEFAULT 0")
     private Integer bookedCount;
+
+    @Column(nullable = false,columnDefinition = "INTEGER DEFAULT 0")
+    private Integer reservedCount;
 
     @Column(nullable = false)
     private Integer totalCount;

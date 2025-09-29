@@ -3,14 +3,17 @@ package com.StayNest.StayNest.Repository;
 import com.StayNest.StayNest.Entity.Hotel;
 import com.StayNest.StayNest.Entity.Inventory;
 import com.StayNest.StayNest.Entity.Room;
+import jakarta.persistence.LockModeType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Repository
 public interface InventoryRepository extends JpaRepository<Inventory,Long> {
@@ -45,4 +48,26 @@ public interface InventoryRepository extends JpaRepository<Inventory,Long> {
             Pageable pageable //If the "Pageable is bot passed then we will not get the paginated reponse"
             );
 
+    //so these lock here will help us to avoid the race condition, that is if there is one user booking the rrom and at the same
+    //time the other user or the concurrent user also comes then the new user is not able access the inventory as it is locked and
+    //accessed by the other user
+    //So we will keep the lock on the rows that satisfies the these below query
+
+    @Query("""
+          SELECT i
+          from Inventory i
+          where i.room.id=:roomId
+              AND i.date BETWEEN :startDate And :endDate
+              AND i.closed=false 
+              AND (i.totalCount-i.bookedCount)>=:roomsCount
+          
+          
+    """)
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    List<Inventory> findAndLockAvailableInventory(
+            @Param("roomId") Long roomId,
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate,
+            @Param("roomsCount") Integer roomsCount
+    );
 }

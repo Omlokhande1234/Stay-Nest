@@ -30,6 +30,7 @@ public class InventoryServiceImpl implements InventoryService{
 
     @Override
     public void initializeRoomForaYear(Room room) {
+
         LocalDate today=LocalDate.now();
         LocalDate endDate=today.plusYears(1);
 
@@ -53,6 +54,7 @@ public class InventoryServiceImpl implements InventoryService{
 
     @Override
     public void deleteFutureInventories(Room room) {
+        log.info("Deleting the inventories of room with id: {} ",room.getId());
         inventoryRepository.deleteByRoom(room);
     }
 
@@ -67,6 +69,8 @@ public class InventoryServiceImpl implements InventoryService{
 //           5)Then also group by hotels and get the reponse by distinct hotels
     @Override
     public Page<HotelDTO> searchHotels(HotelSearchRequest hotelSearchRequest) {
+        log.info("Searching hotels for {} city, from {} to {} ",hotelSearchRequest.getCity(),hotelSearchRequest.getStartDate(),
+                hotelSearchRequest.getEndDate());
         Pageable pageable= PageRequest.of(hotelSearchRequest.getPage(),hotelSearchRequest.getSize());
         long dateCount= ChronoUnit.DAYS.between(hotelSearchRequest.getStartDate(),hotelSearchRequest.getEndDate())+1;
         Page<Hotel> hotelPage=inventoryRepository.findHotelsWithAvailableInventory(hotelSearchRequest.getCity(),
