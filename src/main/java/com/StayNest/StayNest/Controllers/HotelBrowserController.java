@@ -1,6 +1,7 @@
 package com.StayNest.StayNest.Controllers;
 
 import com.StayNest.StayNest.DTO.HotelDTO;
+import com.StayNest.StayNest.DTO.HotelPriceDTO;
 import com.StayNest.StayNest.DTO.HotelSearchRequest;
 import com.StayNest.StayNest.DTO.HotellnfoDTO;
 import com.StayNest.StayNest.Services.HotelService;
@@ -25,8 +26,8 @@ public class HotelBrowserController {
 
     //We will the inventory service in order search the hotels
     @GetMapping("/search")
-    public ResponseEntity<Page<HotelDTO>> searchHotel(@RequestBody HotelSearchRequest hotelSearchRequest){
-        Page<HotelDTO> page=inventoryService.searchHotels(hotelSearchRequest);
+    public ResponseEntity<Page<HotelPriceDTO>> searchHotel(@RequestBody HotelSearchRequest hotelSearchRequest){
+        Page<HotelPriceDTO> page=inventoryService.searchHotels(hotelSearchRequest);
         return ResponseEntity.ok(page);
     }
     @GetMapping("/{hotelId}/info")
