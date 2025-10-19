@@ -4,7 +4,7 @@ import com.StayNest.StayNest.DTO.HotellnfoDTO;
 import com.StayNest.StayNest.DTO.RoomDTO;
 import com.StayNest.StayNest.Entity.Hotel;
 import com.StayNest.StayNest.Entity.Room;
-import com.StayNest.StayNest.Exceptions.ResoureNotFoundException;
+import com.StayNest.StayNest.Exceptions.ResourceNotFoundException;
 import com.StayNest.StayNest.Repository.HotelRepository;
 import com.StayNest.StayNest.Repository.RoomRepository;
 import jakarta.transaction.Transactional;
@@ -38,7 +38,7 @@ public class HotelServiceImpl implements HotelService {
         log.info("Getting the hotel by id{}",id);
         Hotel hotel=hotelRepository
                 .findById(id)
-                .orElseThrow(()->new ResoureNotFoundException("Hotel not found with the given id"));
+                .orElseThrow(()->new ResourceNotFoundException("Hotel not found with the given id"));
         return modelMapper.map(hotel,HotelDTO.class);
     }
 
@@ -47,7 +47,7 @@ public class HotelServiceImpl implements HotelService {
         log.info("Updating the hotel by id{}",id);
         Hotel hotel=hotelRepository
                 .findById(id)
-                .orElseThrow(()->new ResoureNotFoundException("Hotel not found with the given id: "+id));
+                .orElseThrow(()->new ResourceNotFoundException("Hotel not found with the given id: "+id));
         modelMapper.map(hotelDTO,hotel);
         hotel.setId(id);
         hotel=hotelRepository.save(hotel);
@@ -58,7 +58,7 @@ public class HotelServiceImpl implements HotelService {
     @Override
     public void deleteHotelById(Long id) {
         Hotel hotel=hotelRepository.findById(id)
-                        .orElseThrow(()->new ResoureNotFoundException("Hotel not found with the id "+id));
+                        .orElseThrow(()->new ResourceNotFoundException("Hotel not found with the id "+id));
 
         // delete the future inventories for this hotel
         for (Room room:hotel.getRooms()){
@@ -74,7 +74,7 @@ public class HotelServiceImpl implements HotelService {
         log.info("Activating the hotel with the given id {} ",id);
         Hotel hotel=hotelRepository
                 .findById(id)
-                .orElseThrow(()->new ResoureNotFoundException("Hotel not found with id "+id));
+                .orElseThrow(()->new ResourceNotFoundException("Hotel not found with id "+id));
         hotel.setActive(true);
 
         //Creating the inventory for this newly created hotel
@@ -88,7 +88,7 @@ public class HotelServiceImpl implements HotelService {
     public HotellnfoDTO getHotelInfoById(Long hotelId) {
         Hotel hotel =hotelRepository.
                 findById(hotelId)
-                .orElseThrow(()->new ResoureNotFoundException("Hotel Not found with the id: "+hotelId));
+                .orElseThrow(()->new ResourceNotFoundException("Hotel Not found with the id: "+hotelId));
         List<RoomDTO> rooms=hotel.getRooms().stream()
                 .map((element)->modelMapper.map(element,RoomDTO.class)).toList();
         return new HotellnfoDTO(modelMapper.map(hotel,HotelDTO.class),rooms);

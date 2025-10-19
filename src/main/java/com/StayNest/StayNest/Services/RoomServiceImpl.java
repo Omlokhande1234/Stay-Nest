@@ -3,7 +3,7 @@ package com.StayNest.StayNest.Services;
 import com.StayNest.StayNest.DTO.RoomDTO;
 import com.StayNest.StayNest.Entity.Hotel;
 import com.StayNest.StayNest.Entity.Room;
-import com.StayNest.StayNest.Exceptions.ResoureNotFoundException;
+import com.StayNest.StayNest.Exceptions.ResourceNotFoundException;
 import com.StayNest.StayNest.Repository.HotelRepository;
 import com.StayNest.StayNest.Repository.RoomRepository;
 import jakarta.transaction.Transactional;
@@ -13,7 +13,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,7 +31,7 @@ public class RoomServiceImpl implements RoomService {
         //Before creating the room check whether the hotel for which the room is created exists or not
         Hotel hotel=hotelRepository
                 .findById(hotelId)
-                .orElseThrow(()->new ResoureNotFoundException("Hotel not found with the id: "+hotelId));
+                .orElseThrow(()->new ResourceNotFoundException("Hotel not found with the id: "+hotelId));
         Room room=modelMapper.map(roomDTO,Room.class);
         room.setHotel(hotel);
         room= roomRepository.save(room);
@@ -48,7 +47,7 @@ public class RoomServiceImpl implements RoomService {
         log.info("Getting all rooms for the hotel{}",hotelId);
         Hotel hotel=hotelRepository
                 .findById(hotelId)
-                .orElseThrow(()->new ResoureNotFoundException("Hotel not found with ID: "+hotelId));
+                .orElseThrow(()->new ResourceNotFoundException("Hotel not found with ID: "+hotelId));
         return hotel.getRooms().stream()
                 .map((element)->modelMapper.map(element,RoomDTO.class)).collect(Collectors.toList());
 
@@ -59,7 +58,7 @@ public class RoomServiceImpl implements RoomService {
         log.info("Getting the hotel by id {}",roomId);
         Room room=roomRepository
                 .findById(roomId)
-                .orElseThrow(()->new ResoureNotFoundException("Room not found with the id: " +roomId));
+                .orElseThrow(()->new ResourceNotFoundException("Room not found with the id: " +roomId));
         return modelMapper.map(room,RoomDTO.class);
 
     }
@@ -70,7 +69,7 @@ public class RoomServiceImpl implements RoomService {
         log.info("Deleting the hotel by id {}",roomId);
         Room room=roomRepository
                 .findById(roomId)
-                .orElseThrow(()->new ResoureNotFoundException("Room not found with id: "+roomId));
+                .orElseThrow(()->new ResourceNotFoundException("Room not found with id: "+roomId));
 
         // DELETE ALL FUTURE INVENTORY FOR THIS ROW
         inventoryService.deleteFutureInventories(room);
